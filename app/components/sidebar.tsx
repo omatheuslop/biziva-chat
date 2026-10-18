@@ -250,8 +250,8 @@ export function SideBar(props: { className?: string }) {
       {...props}
     >
       <SideBarHeader
-        title="NextChat"
-        subTitle="Build your own AI assistant."
+        title="Biziva Chat"
+        subTitle="Vendas, propostas e campanhas."
         logo={<NextChatIcon />}
         shouldNarrow={shouldNarrow}
       >
@@ -305,6 +305,11 @@ export function SideBar(props: { className?: string }) {
           />
         )}
       </SideBarHeader>
+      {!shouldNarrow && <div style={{fontSize:12,padding:"0 12px 12px",lineHeight:1.5}}>
+        <div>Use sua chave API Biziva nas configurações. Ela permanece somente nesta aba.</div>
+        <a href="/conta" target="_top">Minha conta · ChatGPT</a>{" · "}
+        <a href="https://github.com/omatheuslop/biziva-chat" target="_blank" rel="noreferrer">Código-fonte · NextChat/MIT</a>
+      </div>}
       <SideBarBody
         onClick={(e) => {
           if (e.target === e.currentTarget) {
