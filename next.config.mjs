@@ -4,7 +4,8 @@ import { fileURLToPath } from "node:url";
 const mode = process.env.BUILD_MODE ?? "standalone";
 console.log("[Next] build mode", mode);
 
-const disableChunk = !!process.env.DISABLE_CHUNK || mode === "export";
+// Preserve Next.js CSS/JS chunk boundaries in public exports.
+const disableChunk = process.env.DISABLE_CHUNK === "true";
 console.log("[Next] build with chunk: ", !disableChunk);
 
 /** @type {import('next').NextConfig} */
