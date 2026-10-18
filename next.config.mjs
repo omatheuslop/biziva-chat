@@ -1,4 +1,5 @@
 import webpack from "webpack";
+import { fileURLToPath } from "node:url";
 
 const mode = process.env.BUILD_MODE ?? "standalone";
 console.log("[Next] build mode", mode);
@@ -18,6 +19,12 @@ const nextConfig = {
       config.plugins.push(
         new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
       );
+    }
+    if (mode === "export") {
+      config.plugins.push(new webpack.NormalModuleReplacementPlugin(
+        /(?:^|[\\/])mcp[\\/]actions(?:\.ts)?$/,
+        fileURLToPath(new URL("./app/mcp/actions.export.ts", import.meta.url)),
+      ));
     }
 
     config.resolve.fallback = {
