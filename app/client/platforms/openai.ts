@@ -303,6 +303,10 @@ export class ChatGPTApi implements LLMApi {
           isDalle3 ? OpenaiPath.ImagePath : OpenaiPath.ChatPath,
         );
       }
+      const requestHeaders = getHeaders();
+      if (modelConfig.model.startsWith("biziva-")) {
+        requestHeaders["X-Request-Id"] = crypto.randomUUID();
+      }
       if (shouldStream) {
         let index = -1;
         const [tools, funcs] = usePluginStore
@@ -314,7 +318,7 @@ export class ChatGPTApi implements LLMApi {
         streamWithThink(
           chatPath,
           requestPayload,
-          getHeaders(),
+          requestHeaders,
           tools as any,
           funcs,
           controller,
@@ -407,7 +411,7 @@ export class ChatGPTApi implements LLMApi {
           method: "POST",
           body: JSON.stringify(requestPayload),
           signal: controller.signal,
-          headers: getHeaders(),
+          headers: requestHeaders,
         };
 
         // make a fetch request
