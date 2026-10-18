@@ -665,6 +665,8 @@ export const useChatStore = createPersistStore(
         const config = useAppConfig.getState();
         const session = targetSession;
         const modelConfig = session.mask.modelConfig;
+        // Biziva conversations do not trigger extra paid title/memory requests.
+        if (modelConfig.model.startsWith("biziva-") && !refreshTitle) return;
         // skip summarize when using dalle3?
         if (isDalle3(modelConfig.model)) {
           return;

@@ -25,12 +25,13 @@ import { createPersistStore } from "../utils/store";
 import { ensure } from "../utils/clone";
 import { DEFAULT_CONFIG } from "./config";
 import { getModelProvider } from "../utils/model";
+import { scrubCredentials } from "../biziva/credentials";
 
 let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 
 const isApp = getClientConfig()?.buildMode === "export";
 
-const DEFAULT_OPENAI_URL = isApp ? OPENAI_BASE_URL : ApiPath.OpenAI;
+const DEFAULT_OPENAI_URL: string = ApiPath.OpenAI;
 
 const DEFAULT_GOOGLE_URL = isApp ? GEMINI_BASE_URL : ApiPath.Google;
 
@@ -64,7 +65,7 @@ const DEFAULT_AI302_URL = isApp ? AI302_BASE_URL : ApiPath["302.AI"];
 
 const DEFAULT_ACCESS_STATE = {
   accessCode: "",
-  useCustomConfig: false,
+  useCustomConfig: true,
 
   provider: ServiceProvider.OpenAI,
 
@@ -140,9 +141,9 @@ const DEFAULT_ACCESS_STATE = {
   ai302ApiKey: "",
 
   // server config
-  needCode: true,
+  needCode: false,
   hideUserApiKey: false,
-  hideBalanceQuery: false,
+  hideBalanceQuery: true,
   disableGPT4: false,
   disableFastLink: false,
   customModels: "",
@@ -284,6 +285,8 @@ export const useAccessStore = createPersistStore(
   }),
   {
     name: StoreKey.Access,
+    partialize: (state) => scrubCredentials(state),
+    merge: (persisted, current) => ({ ...current, ...scrubCredentials(persisted as typeof current) }),
     version: 2,
     migrate(persistedState, version) {
       if (version < 2) {
